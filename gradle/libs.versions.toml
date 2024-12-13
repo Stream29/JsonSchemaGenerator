@@ -2,11 +2,13 @@
 kotlin = "2.0.21"
 kotlinx-serialization = "1.7.2"
 vanniktech = "0.29.0"
+streamlin = "2.4"
 
 [libraries]
 vanniktech-publish = { module = "com.vanniktech.maven.publish:com.vanniktech.maven.publish.gradle.plugin", version.ref = "vanniktech" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
+streamlin = { module = "io.github.stream29:streamlin", version.ref = "streamlin" }
 
 [bundles]
 
