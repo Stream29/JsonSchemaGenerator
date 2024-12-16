@@ -11,8 +11,8 @@ import kotlinx.serialization.json.put
 @SerialInfo
 public annotation class Description(val text: String)
 
-internal fun JsonObjectBuilder.putDescription(annotation: Iterable<Annotation>, annotations: Iterable<Annotation>) {
-    annotation.asSequence().plus(annotations)
+internal fun JsonObjectBuilder.putDescription(annotations: Iterable<Annotation>) {
+    annotations.asSequence()
         .filterIsInstance<Description>()
         .firstOrNull()
         ?.let { put("description", it.text) }

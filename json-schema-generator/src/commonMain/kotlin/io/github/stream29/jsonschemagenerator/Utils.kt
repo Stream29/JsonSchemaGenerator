@@ -22,10 +22,10 @@ internal fun JsonObjectBuilder.putEnum(enumNames: Iterable<String>, nullable: Bo
 }
 
 @OptIn(ExperimentalSerializationApi::class)
-internal fun JsonObjectBuilder.putProperties(descriptor: SerialDescriptor)= with(descriptor) {
+internal fun JsonObjectBuilder.putProperties(descriptor: SerialDescriptor) = with(descriptor) {
     putJsonObject("properties") {
-        for(i in 0..<elementsCount) {
-            put(getElementName(i),getElementDescriptor(i).toSchema(getElementAnnotations(i)))
+        for (i in 0..<elementsCount) {
+            put(getElementName(i), getElementDescriptor(i).toSchema(getElementAnnotations(i)))
         }
     }
 }
