@@ -1,5 +1,3 @@
-package buildsrc.convention
-
 import com.vanniktech.maven.publish.SonatypeHost
 import org.gradle.kotlin.dsl.`maven-publish`
 import java.net.URI

@@ -1,15 +1,12 @@
 plugins {
-    alias(libs.plugins.kotlin.multiplatform)
+    kotlin("multiplatform")
     alias(libs.plugins.kotlin.serialization)
-}
-
-dependencies {
+    id("publish-conventions")
+    id("targets-conventions")
 }
 
 kotlin {
     explicitApi()
-    jvm()
-
     sourceSets {
         val commonMain by getting {
             dependencies {
@@ -19,7 +16,6 @@ kotlin {
         val commonTest by getting {
             dependencies {
                 implementation(libs.kotlin.test)
-                implementation(libs.streamlin)
             }
         }
     }
