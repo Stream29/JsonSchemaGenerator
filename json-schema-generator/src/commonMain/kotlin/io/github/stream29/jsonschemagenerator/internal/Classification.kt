@@ -1,4 +1,4 @@
-package io.github.stream29.jsonschemagenerator
+package io.github.stream29.jsonschemagenerator.internal
 
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerializationException
@@ -6,8 +6,6 @@ import kotlinx.serialization.descriptors.*
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.putJsonObject
-
-public fun SerialDescriptor.toSchema(): JsonObject = toSchema(emptyList())
 
 @OptIn(ExperimentalSerializationApi::class)
 internal fun SerialDescriptor.toSchema(propertyAnnotations: Iterable<Annotation>): JsonObject {
@@ -39,13 +37,13 @@ internal fun SerialDescriptor.toSchema(propertyAnnotations: Iterable<Annotation>
             if (keyDescriptor.kind != PrimitiveKind.STRING) throw SerializationException("Map key must be a string")
             putType("object", isNullable)
             putDescription(allAnnotations)
-            putJsonObject("additionalProperties") { put("type", valueDescriptor.toSchema()) }
+            putJsonObject("additionalProperties") { put("type", valueDescriptor.toSchema(emptyList())) }
         }
 
         StructureKind.LIST -> buildJsonObject {
             putType("array", isNullable)
             putDescription(allAnnotations)
-            put("items", elementDescriptors.single().toSchema())
+            put("items", elementDescriptors.single().toSchema(emptyList()))
         }
     }
 }

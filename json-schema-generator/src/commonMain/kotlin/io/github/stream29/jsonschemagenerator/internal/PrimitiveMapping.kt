@@ -1,4 +1,4 @@
-package io.github.stream29.jsonschemagenerator
+package io.github.stream29.jsonschemagenerator.internal
 
 import kotlinx.serialization.descriptors.PrimitiveKind
 

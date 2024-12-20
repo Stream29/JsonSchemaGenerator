@@ -1,4 +1,4 @@
-import io.github.stream29.jsonschemagenerator.toSchema
+import io.github.stream29.jsonschemagenerator.schemaOf
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.builtins.MapSerializer
 import kotlinx.serialization.builtins.serializer
@@ -11,7 +11,7 @@ import kotlin.test.assertEquals
 private val json = Json { prettyPrint = true }
 
 fun schemaTest(descriptor: SerialDescriptor, expected: String) {
-    val jsonObject = descriptor.toSchema()
+    val jsonObject = schemaOf(descriptor)
     println(json.encodeToString(jsonObject))
     assertEquals(json.parseToJsonElement(expected), jsonObject)
 }

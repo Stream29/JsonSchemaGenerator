@@ -1,5 +1,6 @@
-package io.github.stream29.jsonschemagenerator
+package io.github.stream29.jsonschemagenerator.internal
 
+import io.github.stream29.jsonschemagenerator.Description
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.elementNames
@@ -39,4 +40,11 @@ internal fun JsonObjectBuilder.putRequired(descriptor: SerialDescriptor) = with(
             }
         }
     }
+}
+
+internal fun JsonObjectBuilder.putDescription(annotations: Iterable<Annotation>) {
+    annotations.asSequence()
+        .filterIsInstance<Description>()
+        .firstOrNull()
+        ?.let { put("description", it.text) }
 }
