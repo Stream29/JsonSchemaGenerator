@@ -46,5 +46,5 @@ internal fun JsonObjectBuilder.putDescription(annotations: Iterable<Annotation>)
     annotations.asSequence()
         .filterIsInstance<Description>()
         .firstOrNull()
-        ?.let { put("description", it.text) }
+        ?.let { put("description", it.value) }
 }
