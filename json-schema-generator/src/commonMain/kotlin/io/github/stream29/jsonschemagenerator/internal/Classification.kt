@@ -24,6 +24,13 @@ internal fun SerialDescriptor.toSchema(propertyAnnotations: Iterable<Annotation>
                     putMinLength(allAnnotations)
                     putMaxLength(allAnnotations)
                 }
+                JsonPrimitiveType.INTEGER, JsonPrimitiveType.NUMBER -> {
+                    putMinimum(allAnnotations) ?: putMinimumDouble(allAnnotations)
+                    putMaximum(allAnnotations) ?: putMaximumDouble(allAnnotations)
+                    putExclusiveMinimum(allAnnotations) ?: putExclusiveMinimumDouble(allAnnotations)
+                    putExclusiveMaximum(allAnnotations) ?: putExclusiveMaximumDouble(allAnnotations)
+                    putMultipleOf(allAnnotations) ?: putMultipleOfDouble(allAnnotations)
+                }
                 else -> {}
             }
         }

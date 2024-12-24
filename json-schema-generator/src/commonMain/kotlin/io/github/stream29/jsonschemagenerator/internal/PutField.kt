@@ -45,12 +45,11 @@ internal fun JsonObjectBuilder.putRequired(descriptor: SerialDescriptor) = with(
 private inline fun <reified T> JsonObjectBuilder.findAnnotationAnd(
     annotations: Iterable<Annotation>,
     action: (T) -> Unit
-) {
-    annotations.asSequence()
-        .filterIsInstance<T>()
-        .firstOrNull()
-        ?.let(action)
-}
+) = annotations.asSequence()
+    .filterIsInstance<T>()
+    .firstOrNull()
+    ?.also(action)
+
 
 internal fun JsonObjectBuilder.putComment(annotations: Iterable<Annotation>) =
     findAnnotationAnd<Comment>(annotations) { put("${'$'}comment", it.value) }
@@ -69,3 +68,33 @@ internal fun JsonObjectBuilder.putMaxLength(annotations: Iterable<Annotation>) =
 
 internal fun JsonObjectBuilder.putMinLength(annotations: Iterable<Annotation>) =
     findAnnotationAnd<MinLength>(annotations) { put("minLength", it.value) }
+
+internal fun JsonObjectBuilder.putMultipleOf(annotations: Iterable<Annotation>) =
+    findAnnotationAnd<MultipleOf>(annotations) { put("multipleOf", it.value) }
+
+internal fun JsonObjectBuilder.putMinimum(annotations: Iterable<Annotation>) =
+    findAnnotationAnd<Minimum>(annotations) { put("minimum", it.value) }
+
+internal fun JsonObjectBuilder.putMaximum(annotations: Iterable<Annotation>) =
+    findAnnotationAnd<Maximum>(annotations) { put("maximum", it.value) }
+
+internal fun JsonObjectBuilder.putExclusiveMinimum(annotations: Iterable<Annotation>) =
+    findAnnotationAnd<ExclusiveMinimum>(annotations) { put("exclusiveMinimum", it.value) }
+
+internal fun JsonObjectBuilder.putExclusiveMaximum(annotations: Iterable<Annotation>) =
+    findAnnotationAnd<ExclusiveMaximum>(annotations) { put("exclusiveMaximum", it.value) }
+
+internal fun JsonObjectBuilder.putMultipleOfDouble(annotations: Iterable<Annotation>) =
+    findAnnotationAnd<MultipleOfDouble>(annotations) { put("multipleOf", it.value) }
+
+internal fun JsonObjectBuilder.putMinimumDouble(annotations: Iterable<Annotation>) =
+    findAnnotationAnd<MinimumDouble>(annotations) { put("minimum", it.value) }
+
+internal fun JsonObjectBuilder.putMaximumDouble(annotations: Iterable<Annotation>) =
+    findAnnotationAnd<MaximumDouble>(annotations) { put("maximum", it.value) }
+
+internal fun JsonObjectBuilder.putExclusiveMinimumDouble(annotations: Iterable<Annotation>) =
+    findAnnotationAnd<ExclusiveMinimumDouble>(annotations) { put("exclusiveMinimum", it.value) }
+
+internal fun JsonObjectBuilder.putExclusiveMaximumDouble(annotations: Iterable<Annotation>) =
+    findAnnotationAnd<ExclusiveMaximumDouble>(annotations) { put("exclusiveMaximum", it.value) }
