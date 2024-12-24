@@ -42,44 +42,30 @@ internal fun JsonObjectBuilder.putRequired(descriptor: SerialDescriptor) = with(
     }
 }
 
-internal fun JsonObjectBuilder.putDescription(annotations: Iterable<Annotation>) {
+private inline fun <reified T> JsonObjectBuilder.findAnnotationAnd(
+    annotations: Iterable<Annotation>,
+    action: (T) -> Unit
+) {
     annotations.asSequence()
-        .filterIsInstance<Description>()
+        .filterIsInstance<T>()
         .firstOrNull()
-        ?.let { put("description", it.value) }
+        ?.let(action)
 }
 
-internal fun JsonObjectBuilder.putComment(annotations: Iterable<Annotation>) {
-    annotations.asSequence()
-        .filterIsInstance<Comment>()
-        .firstOrNull()
-        ?.let { put("${'$'}comment", it.value) }
-}
+internal fun JsonObjectBuilder.putComment(annotations: Iterable<Annotation>) =
+    findAnnotationAnd<Comment>(annotations) { put("${'$'}comment", it.value) }
 
-internal fun JsonObjectBuilder.putMinLength(annotations: Iterable<Annotation>) {
-    annotations.asSequence()
-        .filterIsInstance<MinLength>()
-        .firstOrNull()
-        ?.let { put("minLength", it.value) }
-}
+internal fun JsonObjectBuilder.putDescription(annotations: Iterable<Annotation>) =
+    findAnnotationAnd<Description>(annotations) { put("description", it.value) }
 
-internal fun JsonObjectBuilder.putMaxLength(annotations: Iterable<Annotation>) {
-    annotations.asSequence()
-        .filterIsInstance<MaxLength>()
-        .firstOrNull()
-        ?.let { put("maxLength", it.value) }
-}
+internal fun JsonObjectBuilder.putFormat(annotations: Iterable<Annotation>) =
+    findAnnotationAnd<Format>(annotations) { put("format", it.value) }
 
-internal fun JsonObjectBuilder.putPattern(annotations: Iterable<Annotation>) {
-    annotations.asSequence()
-        .filterIsInstance<Pattern>()
-        .firstOrNull()
-        ?.let { put("pattern", it.value) }
-}
+internal fun JsonObjectBuilder.putPattern(annotations: Iterable<Annotation>) =
+    findAnnotationAnd<Pattern>(annotations) { put("pattern", it.value) }
 
-internal fun JsonObjectBuilder.putFormat(annotations: Iterable<Annotation>) {
-    annotations.asSequence()
-        .filterIsInstance<Format>()
-        .firstOrNull()
-        ?.let { put("format", it.value) }
-}
+internal fun JsonObjectBuilder.putMaxLength(annotations: Iterable<Annotation>) =
+    findAnnotationAnd<MaxLength>(annotations) { put("maxLength", it.value) }
+
+internal fun JsonObjectBuilder.putMinLength(annotations: Iterable<Annotation>) =
+    findAnnotationAnd<MinLength>(annotations) { put("minLength", it.value) }
