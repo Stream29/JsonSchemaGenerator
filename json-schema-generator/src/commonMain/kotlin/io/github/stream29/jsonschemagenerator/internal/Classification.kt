@@ -14,8 +14,18 @@ internal fun SerialDescriptor.toSchema(propertyAnnotations: Iterable<Annotation>
     return when (val kind = kind) {
         is PrimitiveKind -> buildJsonObject {
             putComment(allAnnotations)
-            putType(kind.typeName, isNullable)
+            val jsonType = kind.jsonType
+            putType(jsonType.toString(), isNullable)
             putDescription(allAnnotations)
+            when(jsonType) {
+                JsonPrimitiveType.STRING -> {
+                    putFormat(allAnnotations)
+                    putPattern(allAnnotations)
+                    putMinLength(allAnnotations)
+                    putMaxLength(allAnnotations)
+                }
+                else -> {}
+            }
         }
 
         is PolymorphicKind -> throw SerializationException("Polymorphic descriptor is not supported")

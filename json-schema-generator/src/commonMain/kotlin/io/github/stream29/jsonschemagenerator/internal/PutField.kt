@@ -1,7 +1,6 @@
 package io.github.stream29.jsonschemagenerator.internal
 
-import io.github.stream29.jsonschemagenerator.Comment
-import io.github.stream29.jsonschemagenerator.Description
+import io.github.stream29.jsonschemagenerator.*
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.elementNames
@@ -55,4 +54,32 @@ internal fun JsonObjectBuilder.putComment(annotations: Iterable<Annotation>) {
         .filterIsInstance<Comment>()
         .firstOrNull()
         ?.let { put("${'$'}comment", it.value) }
+}
+
+internal fun JsonObjectBuilder.putMinLength(annotations: Iterable<Annotation>) {
+    annotations.asSequence()
+        .filterIsInstance<MinLength>()
+        .firstOrNull()
+        ?.let { put("minLength", it.value) }
+}
+
+internal fun JsonObjectBuilder.putMaxLength(annotations: Iterable<Annotation>) {
+    annotations.asSequence()
+        .filterIsInstance<MaxLength>()
+        .firstOrNull()
+        ?.let { put("maxLength", it.value) }
+}
+
+internal fun JsonObjectBuilder.putPattern(annotations: Iterable<Annotation>) {
+    annotations.asSequence()
+        .filterIsInstance<Pattern>()
+        .firstOrNull()
+        ?.let { put("pattern", it.value) }
+}
+
+internal fun JsonObjectBuilder.putFormat(annotations: Iterable<Annotation>) {
+    annotations.asSequence()
+        .filterIsInstance<Format>()
+        .firstOrNull()
+        ?.let { put("format", it.value) }
 }
