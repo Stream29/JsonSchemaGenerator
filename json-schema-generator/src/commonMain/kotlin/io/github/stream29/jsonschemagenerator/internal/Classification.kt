@@ -14,6 +14,7 @@ internal fun SerialDescriptor.toSchema(propertyAnnotations: Iterable<Annotation>
     return when (val kind = kind) {
         is PrimitiveKind -> buildJsonObject {
             putComment(allAnnotations)
+            putTitle(allAnnotations)
             val jsonType = kind.jsonType
             putType(jsonType.toString(), isNullable)
             putDescription(allAnnotations)
@@ -40,12 +41,14 @@ internal fun SerialDescriptor.toSchema(propertyAnnotations: Iterable<Annotation>
         StructureKind.OBJECT -> buildJsonObject { }
         SerialKind.ENUM -> buildJsonObject {
             putComment(allAnnotations)
+            putTitle(allAnnotations)
             putEnum(elementNames, isNullable)
             putDescription(allAnnotations)
         }
 
         StructureKind.CLASS -> buildJsonObject {
             putComment(allAnnotations)
+            putTitle(allAnnotations)
             putType("object", isNullable)
             putDescription(allAnnotations)
             putProperties(this@toSchema)
@@ -56,6 +59,7 @@ internal fun SerialDescriptor.toSchema(propertyAnnotations: Iterable<Annotation>
             val (keyDescriptor, valueDescriptor) = elementDescriptors.toList()
             if (keyDescriptor.kind != PrimitiveKind.STRING) throw SerializationException("Map key must be a string")
             putComment(allAnnotations)
+            putTitle(allAnnotations)
             putType("object", isNullable)
             putDescription(allAnnotations)
             putJsonObject("additionalProperties") { put("type", valueDescriptor.toSchema(emptyList())) }
@@ -63,6 +67,7 @@ internal fun SerialDescriptor.toSchema(propertyAnnotations: Iterable<Annotation>
 
         StructureKind.LIST -> buildJsonObject {
             putComment(allAnnotations)
+            putTitle(allAnnotations)
             putType("array", isNullable)
             putDescription(allAnnotations)
             put("items", elementDescriptors.single().toSchema(emptyList()))

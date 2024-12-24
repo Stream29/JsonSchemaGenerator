@@ -50,9 +50,11 @@ private inline fun <reified T> JsonObjectBuilder.findAnnotationAnd(
     .firstOrNull()
     ?.also(action)
 
-
 internal fun JsonObjectBuilder.putComment(annotations: Iterable<Annotation>) =
     findAnnotationAnd<Comment>(annotations) { put("${'$'}comment", it.value) }
+
+internal fun JsonObjectBuilder.putTitle(annotations: Iterable<Annotation>) =
+    findAnnotationAnd<Title>(annotations) { put("title", it.value) }
 
 internal fun JsonObjectBuilder.putDescription(annotations: Iterable<Annotation>) =
     findAnnotationAnd<Description>(annotations) { put("description", it.value) }
