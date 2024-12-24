@@ -153,4 +153,48 @@ class SchemaTest {
         """.trimIndent()
         schemaTest(TestDescription.serializer().descriptor, expected)
     }
+
+    @Test
+    fun titleAnnotation() {
+        //language=JSON
+        val expected = """
+            {
+                "${'$'}comment": "TestComment",
+                "title": "TestTitle",
+                "type": "string"
+            }
+        """.trimIndent()
+        schemaTest(TitleTest.serializer().descriptor, expected)
+    }
+
+    @Test
+    fun stringConstraints() {
+        //language=JSON
+        val expected = """
+            {
+                "type": "string",
+                "format": "email",
+                "pattern": "^[a-zA-Z0-9]+${'$'}",
+                "minLength": 5,
+                "maxLength": 10
+            }
+        """.trimIndent()
+        schemaTest(StringConstraintsTest.serializer().descriptor, expected)
+    }
+
+    @Test
+    fun numberConstraints() {
+        //language=JSON
+        val expected = """
+            {
+              "type": "number",
+              "minimum": 1.0,
+              "maximum": 10.0,
+              "exclusiveMinimum": 0.0,
+              "exclusiveMaximum": 11.0,
+              "multipleOf": 2.0
+            }
+        """.trimIndent()
+        schemaTest(NumberConstraintsTest.serializer().descriptor, expected)
+    }
 }
