@@ -10,7 +10,7 @@ import kotlinx.serialization.json.putJsonObject
 @OptIn(ExperimentalSerializationApi::class)
 internal fun SerialDescriptor.toSchema(propertyAnnotations: Iterable<Annotation>): JsonObject {
     val allAnnotations = propertyAnnotations + annotations
-    if (isInline) return elementDescriptors.single().toSchema(allAnnotations)
+    if (isInline) return elementDescriptors.single().toSchema(allAnnotations + getElementAnnotations(0))
     return when (val kind = kind) {
         is PrimitiveKind -> buildJsonObject {
             putComment(allAnnotations)
@@ -18,13 +18,14 @@ internal fun SerialDescriptor.toSchema(propertyAnnotations: Iterable<Annotation>
             val jsonType = kind.jsonType
             putType(jsonType.toString(), isNullable)
             putDescription(allAnnotations)
-            when(jsonType) {
+            when (jsonType) {
                 JsonPrimitiveType.STRING -> {
                     putFormat(allAnnotations)
                     putPattern(allAnnotations)
                     putMinLength(allAnnotations)
                     putMaxLength(allAnnotations)
                 }
+
                 JsonPrimitiveType.INTEGER, JsonPrimitiveType.NUMBER -> {
                     putMinimum(allAnnotations) ?: putMinimumDouble(allAnnotations)
                     putMaximum(allAnnotations) ?: putMaximumDouble(allAnnotations)
@@ -32,6 +33,7 @@ internal fun SerialDescriptor.toSchema(propertyAnnotations: Iterable<Annotation>
                     putExclusiveMaximum(allAnnotations) ?: putExclusiveMaximumDouble(allAnnotations)
                     putMultipleOf(allAnnotations) ?: putMultipleOfDouble(allAnnotations)
                 }
+
                 else -> {}
             }
         }
