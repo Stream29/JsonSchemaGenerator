@@ -1,5 +1,6 @@
 package io.github.stream29.jsonschemagenerator.internal
 
+import io.github.stream29.jsonschemagenerator.Comment
 import io.github.stream29.jsonschemagenerator.Description
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.descriptors.SerialDescriptor
@@ -47,4 +48,11 @@ internal fun JsonObjectBuilder.putDescription(annotations: Iterable<Annotation>)
         .filterIsInstance<Description>()
         .firstOrNull()
         ?.let { put("description", it.value) }
+}
+
+internal fun JsonObjectBuilder.putComment(annotations: Iterable<Annotation>) {
+    annotations.asSequence()
+        .filterIsInstance<Comment>()
+        .firstOrNull()
+        ?.let { put("${'$'}comment", it.value) }
 }
