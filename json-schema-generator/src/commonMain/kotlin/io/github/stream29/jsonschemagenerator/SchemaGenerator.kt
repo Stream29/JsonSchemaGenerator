@@ -17,7 +17,7 @@ public data class SchemaGenerator(
             putTitle()
             putType()
             putDescription()
-            when (descriptor.jsonTypeName) {
+            when (descriptor.kind.jsonTypeName) {
                 "string" -> {
                     putFormat()
                     putPattern()

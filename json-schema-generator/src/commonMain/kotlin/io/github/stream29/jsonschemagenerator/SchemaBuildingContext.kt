@@ -6,14 +6,15 @@ import kotlinx.serialization.descriptors.elementDescriptors
 import kotlinx.serialization.descriptors.elementNames
 import kotlinx.serialization.json.*
 
+@OptIn(ExperimentalSerializationApi::class)
 public data class SchemaBuildingContext(
     val descriptor: SerialDescriptor,
     val annotations: List<Annotation>,
     val generator: SchemaGenerator
 ) {
-    public fun JsonObjectBuilder.putType() = putType(descriptor.jsonTypeName)
 
-    @OptIn(ExperimentalSerializationApi::class)
+    public fun JsonObjectBuilder.putType() = putType(descriptor.kind.jsonTypeName)
+
     public fun JsonObjectBuilder.putType(typeName: String) {
         if (descriptor.isNullable) {
             putJsonArray("type") {
@@ -25,7 +26,6 @@ public data class SchemaBuildingContext(
         }
     }
 
-    @OptIn(ExperimentalSerializationApi::class)
     public fun JsonObjectBuilder.putEnum() {
         putJsonArray("enum") {
             descriptor.elementNames.forEach { add(it) }
@@ -33,7 +33,6 @@ public data class SchemaBuildingContext(
         }
     }
 
-    @OptIn(ExperimentalSerializationApi::class)
     public fun JsonObjectBuilder.putProperties() = with(descriptor) {
         putJsonObject("properties") {
             for (i in 0..<elementsCount) {
@@ -42,12 +41,12 @@ public data class SchemaBuildingContext(
         }
     }
 
-    @OptIn(ExperimentalSerializationApi::class)
+
     public fun JsonObjectBuilder.putItems() = with(descriptor) {
         put("items", generator.schemaOf(elementDescriptors.single(), annotations))
     }
 
-    @OptIn(ExperimentalSerializationApi::class)
+
     public fun JsonObjectBuilder.putRequired() = with(descriptor) {
         if ((0..<elementsCount).any { !isElementOptional(it) }) {
             putJsonArray("required") {
@@ -120,5 +119,4 @@ public data class SchemaBuildingContext(
 
     public fun JsonObjectBuilder.putExclusiveMaximumDouble() =
         findAnnotationAnd<ExclusiveMaximumDouble>(annotations) { put("exclusiveMaximum", it.value) }
-
 }
