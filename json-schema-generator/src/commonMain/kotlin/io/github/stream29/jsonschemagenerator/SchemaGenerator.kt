@@ -83,9 +83,10 @@ public data class SchemaGenerator(
 ) {
     public companion object Default {
         public val default: SchemaGenerator = SchemaGenerator()
-        public inline fun <reified T> from(): JsonObject = default.schemaOf<T>()
     }
 }
+
+public inline fun <reified T> SchemaGenerator.Default.from(): JsonObject = default.schemaOf<T>()
 
 public inline fun <reified T> SchemaGenerator.schemaOf(): JsonObject =
     schemaOf(serializer<T>().descriptor, emptyList())

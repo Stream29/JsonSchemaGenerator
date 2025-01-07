@@ -12,7 +12,7 @@ import kotlin.test.assertEquals
 private val json = Json { prettyPrint = true }
 
 fun schemaTest(descriptor: SerialDescriptor, expected: String) {
-    val jsonObject = SchemaGenerator.Default.schemaOf(descriptor, emptyList())
+    val jsonObject = SchemaGenerator.default.schemaOf(descriptor, emptyList())
     println(json.encodeToString(jsonObject))
     assertEquals(json.parseToJsonElement(expected), jsonObject)
 }
