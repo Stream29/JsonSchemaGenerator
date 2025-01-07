@@ -6,6 +6,9 @@ import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.SerialKind
 import kotlinx.serialization.descriptors.StructureKind
 
+/**
+ * Returns the JSON type name for the given [SerialKind].
+ */
 @OptIn(ExperimentalSerializationApi::class)
 public val SerialKind.jsonTypeName: String
     get() = when (this) {
