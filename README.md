@@ -13,4 +13,12 @@ Please mention that on Kotlin/JS, the string expression of float numbers may be 
 
 ## Get Started
 
+This library is published on Maven Central. Add the following dependency to your `build.gradle.kts`:
+
+```
+implementation("io.github.stream29:json-schema-generator:1.0.0")
+```
+
+Please mention that this library will also include kotlinx.serialization-json as a api dependency.
+
 To quickly learn the usage of this library, see [Kotlin Notebook](Usages.ipynb).
