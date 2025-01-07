@@ -13,10 +13,15 @@ public data class SchemaBuildingContext(
     val generator: SchemaGenerator
 ) {
 
-    public fun JsonObjectBuilder.putType() = putType(descriptor.kind.jsonTypeName)
+    /**
+     * Put the field "type" into the [JsonObject].
+     *
+     * The type name and nullability are inferred from the [SchemaBuildingContext].
+     */
+    public fun JsonObjectBuilder.putType() = putType(descriptor.kind.jsonTypeName, descriptor.isNullable)
 
-    public fun JsonObjectBuilder.putType(typeName: String) {
-        if (descriptor.isNullable) {
+    public fun JsonObjectBuilder.putType(typeName: String, nullable: Boolean) {
+        if (nullable) {
             putJsonArray("type") {
                 add(typeName)
                 add("null")
