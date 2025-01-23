@@ -96,6 +96,10 @@ public data class SchemaGenerator(
 
     val encodePolymorphic: SchemaGeneratingInstruction = {
         buildJsonObject {
+            putComment()
+            putTitle()
+            putType()
+            putDescription()
             putSealedSchemas()
         }
     },
