@@ -198,4 +198,56 @@ class SchemaTest {
         """.trimIndent()
         schemaTest(NumberConstraintsTest.serializer().descriptor, expected)
     }
+
+    @Test
+    fun sealedType() {
+        //language=JSON
+        val expected = """
+            {
+                "anyOf": [
+                    {
+                        "type": "object",
+                        "properties": {
+                            "type": {
+                                "enum": [
+                                    "SealedClass0"
+                                ]
+                            },
+                            "name0": {
+                                "type": "string"
+                            },
+                            "owner0": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "type",
+                            "name0"
+                        ]
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "type": {
+                                "enum": [
+                                    "SealedClass1"
+                                ]
+                            },
+                            "name1": {
+                                "type": "string"
+                            },
+                            "owner1": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "type",
+                            "name1"
+                        ]
+                    }
+                ]
+            }
+        """.trimIndent()
+        schemaTest(SealedInterface.serializer().descriptor, expected)
+    }
 }

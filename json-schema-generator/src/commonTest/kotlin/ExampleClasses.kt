@@ -76,3 +76,18 @@ value class NumberConstraintsTest(
     @MultipleOfDouble(2.0)
     val value: Double = 0.0
 )
+
+@Serializable
+sealed interface SealedInterface
+
+@Serializable
+data class SealedClass0(
+    val name0: String,
+    val owner0: String = "",
+) : SealedInterface
+
+@Serializable
+data class SealedClass1(
+    val name1: String,
+    val owner1: String = "",
+) : SealedInterface

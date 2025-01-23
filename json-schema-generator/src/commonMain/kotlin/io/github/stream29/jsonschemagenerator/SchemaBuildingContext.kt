@@ -94,6 +94,34 @@ public data class SchemaBuildingContext(
         }
     }
 
+    public fun SchemaGenerator.sealedSchemaOf(descriptor: SerialDescriptor) = buildJsonObject {
+        schemaOf(descriptor, emptyList()).forEach { (key, value) ->
+            when (key) {
+                "properties" -> JsonObject(mapOf("type" to buildJsonObject {
+                    putJsonArray("enum") { add(descriptor.serialName) }
+                }) + value.jsonObject)
+
+                "required" -> buildJsonArray {
+                    add("type")
+                    addAll(value.jsonArray)
+                }
+
+                else -> value
+            }.let {
+                put(key, it)
+            }
+        }
+    }
+
+    public fun JsonObjectBuilder.putSealedSchemas() {
+        putJsonArray("anyOf") {
+            descriptor.getElementDescriptor(1)
+                .elementDescriptors
+                .map { generator.sealedSchemaOf(it) }
+                .forEach { add(it) }
+        }
+    }
+
     /**
      * Put the field "additionalProperties" into the [JsonObject] for schema of maps.
      *

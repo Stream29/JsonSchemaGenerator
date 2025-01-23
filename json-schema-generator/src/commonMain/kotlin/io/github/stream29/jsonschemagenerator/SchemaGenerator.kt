@@ -94,7 +94,11 @@ public data class SchemaGenerator(
         }
     },
 
-    val encodePolymorphic: SchemaGeneratingInstruction = { TODO() },
+    val encodePolymorphic: SchemaGeneratingInstruction = {
+        buildJsonObject {
+            putSealedSchemas()
+        }
+    },
     val encodeContextual: SchemaGeneratingInstruction = { TODO() },
     val encodeObject: SchemaGeneratingInstruction = { TODO() },
 ) {
