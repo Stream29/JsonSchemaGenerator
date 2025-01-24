@@ -1,10 +1,9 @@
 package io.github.stream29.jsonschemagenerator
 
 import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.descriptors.SerialDescriptor
-import kotlinx.serialization.descriptors.elementDescriptors
-import kotlinx.serialization.descriptors.elementNames
+import kotlinx.serialization.descriptors.*
 import kotlinx.serialization.json.*
+import kotlin.jvm.JvmOverloads
 
 /**
  * All information needed for building a JSON Schema.
@@ -16,10 +15,12 @@ import kotlinx.serialization.json.*
  * @property generator The [SchemaGenerator] that contains the full instruction to build the schema.
  */
 @OptIn(ExperimentalSerializationApi::class)
-public data class SchemaBuildingContext(
+public data class SchemaBuildingContext
+@JvmOverloads constructor(
     val descriptor: SerialDescriptor,
     val annotations: List<Annotation>,
-    val generator: SchemaGenerator
+    val generator: SchemaGenerator,
+    val globalRefs: MutableMap<String, JsonObject> = mutableMapOf()
 ) {
 
     /**
@@ -65,7 +66,7 @@ public data class SchemaBuildingContext(
     public fun JsonObjectBuilder.putProperties() = with(descriptor) {
         putJsonObject("properties") {
             for (i in 0..<elementsCount) {
-                put(getElementName(i), generator.schemaOf(getElementDescriptor(i), getElementAnnotations(i)))
+                put(getElementName(i), schemaOf(getElementDescriptor(i), getElementAnnotations(i)))
             }
         }
     }
@@ -76,7 +77,7 @@ public data class SchemaBuildingContext(
      * The item type is inferred from the [SchemaBuildingContext].
      */
     public fun JsonObjectBuilder.putItems() = with(descriptor) {
-        put("items", generator.schemaOf(elementDescriptors.single(), annotations))
+        put("items", schemaOf(elementDescriptors.single(), annotations))
     }
 
     /**
@@ -97,7 +98,7 @@ public data class SchemaBuildingContext(
     /**
      * Return the schema of the [descriptor] and add a required field "type" with the [SerialDescriptor.serialName].
      */
-    public fun SchemaGenerator.sealedSchemaOf(descriptor: SerialDescriptor) = buildJsonObject {
+    public fun sealedSchemaOf(descriptor: SerialDescriptor): JsonObject = buildJsonObject {
         schemaOf(descriptor, emptyList()).forEach { (key, value) ->
             when (key) {
                 "properties" -> JsonObject(mapOf("type" to buildJsonObject {
@@ -123,7 +124,7 @@ public data class SchemaBuildingContext(
         putJsonArray("anyOf") {
             descriptor.getElementDescriptor(1)
                 .elementDescriptors
-                .map { generator.sealedSchemaOf(it) }
+                .map { sealedSchemaOf(it) }
                 .forEach { add(it) }
         }
     }
@@ -134,7 +135,7 @@ public data class SchemaBuildingContext(
      * The value type is inferred from the [SchemaBuildingContext].
      */
     public fun JsonObjectBuilder.putAdditionalProperties(valueDescriptor: SerialDescriptor) {
-        putJsonObject("additionalProperties") { put("type", generator.schemaOf(valueDescriptor, emptyList())) }
+        putJsonObject("additionalProperties") { put("type", schemaOf(valueDescriptor, emptyList())) }
     }
 
     /**
@@ -285,4 +286,38 @@ public data class SchemaBuildingContext(
      */
     public fun JsonObjectBuilder.putExclusiveMaximumDouble() =
         findAnnotationAnd<ExclusiveMaximumDouble>(annotations) { put("exclusiveMaximum", it.value) }
+}
+
+@OptIn(ExperimentalSerializationApi::class)
+@JvmOverloads
+public fun SchemaBuildingContext.schemaOf(
+    descriptor: SerialDescriptor,
+    annotations: List<Annotation> = emptyList()
+): JsonObject {
+    val annotations = descriptor.annotations + annotations
+    val newContext = SchemaBuildingContext(descriptor, annotations, generator, globalRefs)
+    if (descriptor.isInline)
+        return newContext.schemaOf(
+            descriptor.elementDescriptors.single(),
+            annotations + descriptor.getElementAnnotations(0)
+        )
+    return with(generator) {
+        with(newContext) {
+            when (descriptor.kind) {
+                is PrimitiveKind -> encodePrimitive()
+                is PolymorphicKind -> encodePolymorphic()
+                SerialKind.CONTEXTUAL -> encodeContextual()
+                StructureKind.OBJECT -> encodeObject()
+                SerialKind.ENUM -> encodeEnum()
+                StructureKind.CLASS -> encodeClass()
+                StructureKind.MAP -> encodeMap()
+                StructureKind.LIST -> encodeArray()
+            }
+        }
+    }.let {
+        if (globalRefs.isNotEmpty())
+            JsonObject(it + mapOf("$'$'ref" to JsonObject(globalRefs)))
+        else
+            JsonObject(it)
+    }
 }

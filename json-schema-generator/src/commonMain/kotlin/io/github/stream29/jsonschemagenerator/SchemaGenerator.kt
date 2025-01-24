@@ -2,7 +2,9 @@ package io.github.stream29.jsonschemagenerator
 
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerializationException
-import kotlinx.serialization.descriptors.*
+import kotlinx.serialization.descriptors.PrimitiveKind
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.descriptors.elementDescriptors
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.serializer
@@ -128,21 +130,5 @@ public inline fun <reified T> SchemaGenerator.schemaOf(): JsonObject =
  * Generate a schema for the given [descriptor] with [annotations].
  */
 @OptIn(ExperimentalSerializationApi::class)
-public fun SchemaGenerator.schemaOf(descriptor: SerialDescriptor, annotations: List<Annotation>): JsonObject {
-    val context = SchemaBuildingContext(descriptor, annotations + descriptor.annotations, this)
-    if (descriptor.isInline)
-        return schemaOf(
-            descriptor.elementDescriptors.single(),
-            context.annotations + descriptor.getElementAnnotations(0)
-        )
-    return when (descriptor.kind) {
-        is PrimitiveKind -> context.encodePrimitive()
-        is PolymorphicKind -> context.encodePolymorphic()
-        SerialKind.CONTEXTUAL -> context.encodeContextual()
-        StructureKind.OBJECT -> context.encodeObject()
-        SerialKind.ENUM -> context.encodeEnum()
-        StructureKind.CLASS -> context.encodeClass()
-        StructureKind.MAP -> context.encodeMap()
-        StructureKind.LIST -> context.encodeArray()
-    }
-}
+public fun SchemaGenerator.schemaOf(descriptor: SerialDescriptor, annotations: List<Annotation>): JsonObject =
+    SchemaBuildingContext(descriptor, annotations, this).schemaOf(descriptor, annotations)
