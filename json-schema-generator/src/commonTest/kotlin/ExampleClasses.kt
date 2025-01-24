@@ -97,3 +97,21 @@ data class SealedClass1(
 data class Recursive(
     val next: Recursive? = null
 )
+
+@Serializable
+@RefWithSerialName
+data class RecursiveWithSerialName(
+    val next: RecursiveWithSerialName? = null
+)
+
+@Serializable
+@RefWithSerialName
+sealed interface Tree
+
+@Serializable
+@RefWithSerialName
+data class Node(
+    val value: String,
+    val left: Tree? = null,
+    val right: Tree? = null
+) : Tree

@@ -204,56 +204,186 @@ class SchemaTest {
     fun sealedType() {
         //language=JSON
         val expected = """
-            {
-                "anyOf": [
                     {
-                        "type": "object",
-                        "properties": {
-                            "type": {
-                                "enum": [
-                                    "SealedClass0"
-                                ]
+            "anyOf": [
+                {
+                    "allOf": [
+                        {
+                            "type": "object",
+                            "properties": {
+                                "name0": {
+                                    "type": "string"
+                                },
+                                "owner0": {
+                                    "type": "string"
+                                }
                             },
-                            "name0": {
-                                "type": "string"
-                            },
-                            "owner0": {
-                                "type": "string"
-                            }
+                            "required": [
+                                "name0"
+                            ]
                         },
-                        "required": [
-                            "type",
-                            "name0"
-                        ]
-                    },
-                    {
-                        "type": "object",
-                        "properties": {
-                            "type": {
-                                "enum": [
-                                    "SealedClass1"
-                                ]
+                        {
+                            "properties": {
+                                "type": {
+                                    "enum": [
+                                        "SealedClass0"
+                                    ]
+                                }
                             },
-                            "name1": {
-                                "type": "string"
+                            "required": [
+                                "type"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "allOf": [
+                        {
+                            "type": "object",
+                            "properties": {
+                                "name1": {
+                                    "type": "string"
+                                },
+                                "owner1": {
+                                    "type": "string"
+                                }
                             },
-                            "owner1": {
-                                "type": "string"
-                            }
+                            "required": [
+                                "name1"
+                            ]
                         },
-                        "required": [
-                            "type",
-                            "name1"
-                        ]
-                    }
-                ]
-            }
+                        {
+                            "properties": {
+                                "type": {
+                                    "enum": [
+                                        "SealedClass1"
+                                    ]
+                                }
+                            },
+                            "required": [
+                                "type"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
         """.trimIndent()
         schemaTest(SealedInterface.serializer().descriptor, expected)
     }
 
     @Test
     fun ref() {
-        println(json.encodeToString(SchemaGenerator.from<Recursive>()))
+        //language=JSON
+        val ref = """
+            {
+                "${'$'}ref": "#/${'$'}defs/recursive",
+                "${'$'}defs": {
+                    "recursive": {
+                        "type": "object",
+                        "properties": {
+                            "next": {
+                                "anyOf": [
+                                    {
+                                        "type": "null"
+                                    },
+                                    {
+                                        "${'$'}ref": "#/${'$'}defs/recursive"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            }
+        """.trimIndent()
+        schemaTest(Recursive.serializer().descriptor, ref)
+        //language=JSON
+        val refWithSerialName = """
+            {
+                "${'$'}ref": "#/${'$'}defs/RecursiveWithSerialName",
+                "${'$'}defs": {
+                    "RecursiveWithSerialName": {
+                        "type": "object",
+                        "properties": {
+                            "next": {
+                                "anyOf": [
+                                    {
+                                        "type": "null"
+                                    },
+                                    {
+                                        "${'$'}ref": "#/${'$'}defs/RecursiveWithSerialName"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            }
+        """.trimIndent()
+        schemaTest(RecursiveWithSerialName.serializer().descriptor, refWithSerialName)
+        //language=JSON
+        val tree = """
+            {
+                "${'$'}ref": "#/${'$'}defs/Tree",
+                "${'$'}defs": {
+                    "Tree": {
+                        "anyOf": [
+                            {
+                                "allOf": [
+                                    {
+                                        "${'$'}ref": "#/${'$'}defs/Node"
+                                    },
+                                    {
+                                        "properties": {
+                                            "type": {
+                                                "enum": [
+                                                    "Node"
+                                                ]
+                                            }
+                                        },
+                                        "required": [
+                                            "type"
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "Node": {
+                        "type": "object",
+                        "properties": {
+                            "value": {
+                                "type": "string"
+                            },
+                            "left": {
+                                "anyOf": [
+                                    {
+                                        "type": "null"
+                                    },
+                                    {
+                                        "${'$'}ref": "#/${'$'}defs/Tree"
+                                    }
+                                ]
+                            },
+                            "right": {
+                                "anyOf": [
+                                    {
+                                        "type": "null"
+                                    },
+                                    {
+                                        "${'$'}ref": "#/${'$'}defs/Tree"
+                                    }
+                                ]
+                            }
+                        },
+                        "required": [
+                            "value"
+                        ]
+                    }
+                }
+            }
+        """.trimIndent()
+        schemaTest(Tree.serializer().descriptor, tree)
     }
 }

@@ -99,20 +99,13 @@ public data class SchemaBuildingContext
      * Return the schema of the [descriptor] and add a required field "type" with the [SerialDescriptor.serialName].
      */
     public fun sealedSchemaOf(descriptor: SerialDescriptor): JsonObject = buildJsonObject {
-        schemaOf(descriptor, emptyList()).forEach { (key, value) ->
-            when (key) {
-                "properties" -> JsonObject(mapOf("type" to buildJsonObject {
-                    putJsonArray("enum") { add(descriptor.serialName) }
-                }) + value.jsonObject)
-
-                "required" -> buildJsonArray {
-                    add("type")
-                    addAll(value.jsonArray)
+        putJsonArray("allOf") {
+            add(schemaOf(descriptor, emptyList()))
+            addJsonObject {
+                putJsonObject("properties") {
+                    put("type", buildJsonObject { putJsonArray("enum") { add(descriptor.serialName) } })
                 }
-
-                else -> value
-            }.let {
-                put(key, it)
+                putJsonArray("required") { add("type") }
             }
         }
     }
@@ -151,19 +144,34 @@ public data class SchemaBuildingContext
         .firstOrNull()
         ?.also(action)
 
-    public fun putRefOnFirstTime(action: JsonObjectBuilder.() -> Unit): JsonObject =
+    public fun putRefOnFirstTime(
+        actionOnRef: (JsonObjectBuilder.() -> Unit)? = null,
+        action: JsonObjectBuilder.() -> Unit
+    ): JsonObject =
         annotations.asSequence().map {
             when (it) {
-                is RefWithSerialName -> descriptor.serialName
+                is RefWithSerialName ->
+                    if(descriptor.isNullable) descriptor.serialName.removeSuffix("?")
+                    else descriptor.serialName
                 is Ref -> it.value
                 else -> null
             }
         }.filterNotNull().firstOrNull()?.let { refName ->
             if (!globalRefs.containsKey(refName)) {
                 globalRefs[refName] = buildJsonObject { put("!!!", "temporary flag") }
-                globalRefs[refName] = buildJsonObject(action)
+                globalRefs[refName] = buildJsonObject(
+                    actionOnRef
+                        ?: throw IllegalArgumentException("You should provide actionOnRef to avoid incorrect behaviour")
+                )
             }
-            buildJsonObject { put("\$ref", "#/\$defs/$refName") }
+            buildJsonObject {
+                if(descriptor.isNullable)
+                    putJsonArray("anyOf"){
+                        addJsonObject { put("type","null") }
+                        addJsonObject { put("\$ref", "#/\$defs/$refName") }
+                    }
+                else put("\$ref", "#/\$defs/$refName")
+            }
         } ?: buildJsonObject(action)
 
 

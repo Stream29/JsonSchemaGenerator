@@ -66,14 +66,24 @@ public data class SchemaGenerator(
         }
     },
     val encodeClass: SchemaGeneratingInstruction = {
-        putRefOnFirstTime {
-            putComment()
-            putTitle()
-            putType()
-            putDescription()
-            putProperties()
-            putRequired()
-        }
+        putRefOnFirstTime(
+            action = {
+                putComment()
+                putTitle()
+                putType()
+                putDescription()
+                putProperties()
+                putRequired()
+            },
+            actionOnRef = {
+                putComment()
+                putTitle()
+                putType(descriptor.kind.jsonTypeName, nullable = false)
+                putDescription()
+                putProperties()
+                putRequired()
+            }
+        )
     },
     val encodeArray: SchemaGeneratingInstruction = {
         buildJsonObject {
@@ -97,12 +107,20 @@ public data class SchemaGenerator(
     },
 
     val encodePolymorphic: SchemaGeneratingInstruction = {
-        buildJsonObject {
-            putComment()
-            putTitle()
-            putDescription()
-            putSealedSchemas()
-        }
+        putRefOnFirstTime(
+            action = {
+                putComment()
+                putTitle()
+                putDescription()
+                putSealedSchemas()
+            },
+            actionOnRef = {
+                putComment()
+                putTitle()
+                putDescription()
+                putSealedSchemas()
+            }
+        )
     },
     val encodeContextual: SchemaGeneratingInstruction = { TODO() },
     val encodeObject: SchemaGeneratingInstruction = { TODO() },
