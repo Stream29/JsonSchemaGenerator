@@ -98,7 +98,6 @@ public data class SchemaGenerator(
         buildJsonObject {
             putComment()
             putTitle()
-            putType()
             putDescription()
             putSealedSchemas()
         }
