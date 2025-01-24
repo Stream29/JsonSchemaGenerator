@@ -94,6 +94,9 @@ public data class SchemaBuildingContext(
         }
     }
 
+    /**
+     * Return the schema of the [descriptor] and add a required field "type" with the [SerialDescriptor.serialName].
+     */
     public fun SchemaGenerator.sealedSchemaOf(descriptor: SerialDescriptor) = buildJsonObject {
         schemaOf(descriptor, emptyList()).forEach { (key, value) ->
             when (key) {
@@ -113,6 +116,9 @@ public data class SchemaBuildingContext(
         }
     }
 
+    /**
+     * Put the field "anyOf" with all the children of the sealed type inferred from [descriptor].
+     */
     public fun JsonObjectBuilder.putSealedSchemas() {
         putJsonArray("anyOf") {
             descriptor.getElementDescriptor(1)
