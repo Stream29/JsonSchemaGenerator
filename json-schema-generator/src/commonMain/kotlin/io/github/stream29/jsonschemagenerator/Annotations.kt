@@ -4,6 +4,26 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialInfo
 
 /**
+ * Annotate to serialize the descriptor as a reference.
+ *
+ * @property value The name of the reference.
+ */
+@OptIn(ExperimentalSerializationApi::class)
+@Target(AnnotationTarget.TYPE, AnnotationTarget.CLASS)
+@SerialInfo
+@MustBeDocumented
+public annotation class Ref(val value: String)
+
+/**
+ * Annotate to serialize the descriptor as a reference with its serial name as the name in `$ref`.
+ */
+@OptIn(ExperimentalSerializationApi::class)
+@Target(AnnotationTarget.TYPE, AnnotationTarget.CLASS)
+@SerialInfo
+@MustBeDocumented
+public annotation class RefWithSerialName
+
+/**
  * Annotate to add a title in the schema.
  *
  * @property value The title of the schema.

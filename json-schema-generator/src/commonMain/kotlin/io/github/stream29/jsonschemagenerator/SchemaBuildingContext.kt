@@ -151,6 +151,22 @@ public data class SchemaBuildingContext
         .firstOrNull()
         ?.also(action)
 
+    public fun putRefOnFirstTime(action: JsonObjectBuilder.() -> Unit): JsonObject =
+        annotations.asSequence().map {
+            when (it) {
+                is RefWithSerialName -> descriptor.serialName
+                is Ref -> it.value
+                else -> null
+            }
+        }.filterNotNull().firstOrNull()?.let { refName ->
+            if (!globalRefs.containsKey(refName)) {
+                globalRefs[refName] = buildJsonObject { put("!!!", "temporary flag") }
+                globalRefs[refName] = buildJsonObject(action)
+            }
+            buildJsonObject { put("\$ref", "#/\$defs/$refName") }
+        } ?: buildJsonObject(action)
+
+
     /**
      * Put the field "comment" into the [JsonObject] for schema.
      *
@@ -314,10 +330,5 @@ public fun SchemaBuildingContext.schemaOf(
                 StructureKind.LIST -> encodeArray()
             }
         }
-    }.let {
-        if (globalRefs.isNotEmpty())
-            JsonObject(it + mapOf("$'$'ref" to JsonObject(globalRefs)))
-        else
-            JsonObject(it)
     }
 }

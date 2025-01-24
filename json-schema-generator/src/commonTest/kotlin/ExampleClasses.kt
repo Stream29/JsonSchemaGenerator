@@ -91,3 +91,9 @@ data class SealedClass1(
     val name1: String,
     val owner1: String = "",
 ) : SealedInterface
+
+@Serializable
+@Ref("recursive")
+data class Recursive(
+    val next: Recursive? = null
+)

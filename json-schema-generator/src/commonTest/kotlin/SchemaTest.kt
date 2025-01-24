@@ -1,4 +1,5 @@
 import io.github.stream29.jsonschemagenerator.SchemaGenerator
+import io.github.stream29.jsonschemagenerator.from
 import io.github.stream29.jsonschemagenerator.schemaOf
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.builtins.MapSerializer
@@ -249,5 +250,10 @@ class SchemaTest {
             }
         """.trimIndent()
         schemaTest(SealedInterface.serializer().descriptor, expected)
+    }
+
+    @Test
+    fun ref() {
+        println(json.encodeToString(SchemaGenerator.from<Recursive>()))
     }
 }

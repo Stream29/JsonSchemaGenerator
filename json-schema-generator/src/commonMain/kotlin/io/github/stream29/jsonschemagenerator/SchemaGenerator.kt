@@ -66,7 +66,7 @@ public data class SchemaGenerator(
         }
     },
     val encodeClass: SchemaGeneratingInstruction = {
-        buildJsonObject {
+        putRefOnFirstTime {
             putComment()
             putTitle()
             putType()
@@ -130,5 +130,13 @@ public inline fun <reified T> SchemaGenerator.schemaOf(): JsonObject =
  * Generate a schema for the given [descriptor] with [annotations].
  */
 @OptIn(ExperimentalSerializationApi::class)
-public fun SchemaGenerator.schemaOf(descriptor: SerialDescriptor, annotations: List<Annotation>): JsonObject =
-    SchemaBuildingContext(descriptor, annotations, this).schemaOf(descriptor, annotations)
+public fun SchemaGenerator.schemaOf(descriptor: SerialDescriptor, annotations: List<Annotation>): JsonObject {
+    val context = SchemaBuildingContext(descriptor, annotations, this)
+    return context.schemaOf(descriptor, annotations)
+        .let {
+            if (context.globalRefs.isNotEmpty())
+                JsonObject(it + mapOf("\$defs" to JsonObject(context.globalRefs)))
+            else
+                JsonObject(it)
+        }
+}
