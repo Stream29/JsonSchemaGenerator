@@ -310,6 +310,38 @@ public data class SchemaBuildingContext
      */
     public fun JsonObjectBuilder.putExclusiveMaximumDouble() =
         findAnnotationAnd<ExclusiveMaximumDouble>(annotations) { put("exclusiveMaximum", it.value) }
+
+    /**
+     * Put the field "minimum" into the [JsonObject] for schema of numbers.
+     *
+     * The minimum is the default minimum of this Type.
+     */
+    public fun JsonObjectBuilder.putDefaultMinimum() =
+        descriptor.kind.jsonNumberRestriction?.first?.run { put("minimum", this) }
+
+    /**
+     * Put the field "maximum" into the [JsonObject] for schema of numbers.
+     *
+     * The maximum is the default maximum of this Type.
+     */
+    public fun JsonObjectBuilder.putDefaultMaximum() =
+        descriptor.kind.jsonNumberRestriction?.second?.run { put("maximum", this) }
+
+    /**
+     * Put the field "minLength" into the [JsonObject] for schema of string.
+     *
+     * The minLength is the default minimum length of this Type.
+     */
+    public fun JsonObjectBuilder.putDefaultMinLength() =
+        if (descriptor.kind == PrimitiveKind.CHAR) put("minLength", 1) else null
+
+    /**
+     * Put the field "maxLength" into the [JsonObject] for schema of string.
+     *
+     * The maxLength is the default maximum length of this Type.
+     */
+    public fun JsonObjectBuilder.putDefaultMaxLength() =
+        if (descriptor.kind == PrimitiveKind.CHAR) put("maxLength", 1) else null
 }
 
 @OptIn(ExperimentalSerializationApi::class)

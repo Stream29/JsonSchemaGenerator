@@ -29,3 +29,16 @@ public val SerialKind.jsonTypeName: String
         is PolymorphicKind -> "object"
         SerialKind.CONTEXTUAL -> "object"
     }
+
+/**
+ * Returns the JSON type restriction for the given [SerialKind].
+ * The result is a closed interval of the form `[min, max]`.
+ */
+public val SerialKind.jsonNumberRestriction: Pair<Number, Number>?
+    get() = when (this) {
+        PrimitiveKind.BYTE -> Byte.MIN_VALUE to Byte.MAX_VALUE
+        PrimitiveKind.SHORT -> Short.MIN_VALUE to Short.MAX_VALUE
+        PrimitiveKind.INT -> Int.MIN_VALUE to Int.MAX_VALUE
+        PrimitiveKind.FLOAT -> Float.MIN_VALUE to Float.MAX_VALUE
+        else -> null
+    }

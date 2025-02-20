@@ -40,13 +40,13 @@ public data class SchemaGenerator(
                 "string" -> {
                     putFormat()
                     putPattern()
-                    putMinLength()
-                    putMaxLength()
+                    putMinLength() ?: putDefaultMinLength()
+                    putMaxLength() ?: putDefaultMaxLength()
                 }
 
                 "integer", "number" -> {
-                    putMinimum() ?: putMinimumDouble()
-                    putMaximum() ?: putMaximumDouble()
+                    putMinimum() ?: putMinimumDouble() ?: putDefaultMinimum()
+                    putMaximum() ?: putMaximumDouble() ?: putDefaultMaximum()
                     putExclusiveMinimum() ?: putExclusiveMinimumDouble()
                     putExclusiveMaximum() ?: putExclusiveMaximumDouble()
                     putMultipleOf() ?: putMultipleOfDouble()
