@@ -20,7 +20,7 @@ public val SerialKind.jsonTypeName: String
         PrimitiveKind.FLOAT -> "number"
         PrimitiveKind.DOUBLE -> "number"
         PrimitiveKind.BOOLEAN -> "boolean"
-        PrimitiveKind.CHAR -> "char"
+        PrimitiveKind.CHAR -> "string"
         StructureKind.LIST -> "array"
         StructureKind.MAP -> "object"
         StructureKind.CLASS -> "object"
