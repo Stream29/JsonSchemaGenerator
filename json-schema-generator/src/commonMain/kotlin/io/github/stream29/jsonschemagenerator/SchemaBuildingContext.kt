@@ -128,7 +128,7 @@ public data class SchemaBuildingContext
      * The value type is inferred from the [SchemaBuildingContext].
      */
     public fun JsonObjectBuilder.putAdditionalProperties(valueDescriptor: SerialDescriptor) {
-        put("additionalProperties",schemaOf(valueDescriptor, emptyList()))
+        put("additionalProperties", schemaOf(valueDescriptor, emptyList()))
     }
 
     /**
@@ -151,8 +151,9 @@ public data class SchemaBuildingContext
         annotations.asSequence().map {
             when (it) {
                 is RefWithSerialName ->
-                    if(descriptor.isNullable) descriptor.serialName.removeSuffix("?")
+                    if (descriptor.isNullable) descriptor.serialName.removeSuffix("?")
                     else descriptor.serialName
+
                 is Ref -> it.value
                 else -> null
             }
@@ -165,9 +166,9 @@ public data class SchemaBuildingContext
                 )
             }
             buildJsonObject {
-                if(descriptor.isNullable)
-                    putJsonArray("anyOf"){
-                        addJsonObject { put("type","null") }
+                if (descriptor.isNullable)
+                    putJsonArray("anyOf") {
+                        addJsonObject { put("type", "null") }
                         addJsonObject { put("\$ref", "#/\$defs/$refName") }
                     }
                 else put("\$ref", "#/\$defs/$refName")
