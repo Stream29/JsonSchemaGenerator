@@ -128,7 +128,7 @@ public data class SchemaBuildingContext
      * The value type is inferred from the [SchemaBuildingContext].
      */
     public fun JsonObjectBuilder.putAdditionalProperties(valueDescriptor: SerialDescriptor) {
-        putJsonObject("additionalProperties") { put("type", schemaOf(valueDescriptor, emptyList())) }
+        put("additionalProperties",schemaOf(valueDescriptor, emptyList()))
     }
 
     /**
