@@ -9,7 +9,6 @@ import kotlinx.serialization.SerialInfo
  * @property value The name of the reference.
  */
 @OptIn(ExperimentalSerializationApi::class)
-@Target(AnnotationTarget.TYPE, AnnotationTarget.CLASS)
 @SerialInfo
 @MustBeDocumented
 public annotation class Ref(val value: String)
@@ -18,7 +17,6 @@ public annotation class Ref(val value: String)
  * Annotate to serialize the descriptor as a reference with its serial name as the name in `$ref`.
  */
 @OptIn(ExperimentalSerializationApi::class)
-@Target(AnnotationTarget.TYPE, AnnotationTarget.CLASS)
 @SerialInfo
 @MustBeDocumented
 public annotation class RefWithSerialName
@@ -29,7 +27,6 @@ public annotation class RefWithSerialName
  * @property value The title of the schema.
  */
 @OptIn(ExperimentalSerializationApi::class)
-@Target(AnnotationTarget.PROPERTY, AnnotationTarget.CLASS)
 @SerialInfo
 @MustBeDocumented
 public annotation class Title(val value: String)
@@ -40,7 +37,6 @@ public annotation class Title(val value: String)
  * @property value The description of the schema.
  */
 @OptIn(ExperimentalSerializationApi::class)
-@Target(AnnotationTarget.PROPERTY, AnnotationTarget.CLASS)
 @SerialInfo
 @MustBeDocumented
 public annotation class Description(val value: String)
@@ -51,7 +47,6 @@ public annotation class Description(val value: String)
  * @property value The comment of the schema.
  */
 @OptIn(ExperimentalSerializationApi::class)
-@Target(AnnotationTarget.PROPERTY, AnnotationTarget.CLASS)
 @SerialInfo
 @MustBeDocumented
 public annotation class Comment(val value: String)
@@ -62,7 +57,6 @@ public annotation class Comment(val value: String)
  * @property value The minimum length of the string.
  */
 @OptIn(ExperimentalSerializationApi::class)
-@Target(AnnotationTarget.PROPERTY)
 @SerialInfo
 @MustBeDocumented
 public annotation class MinLength(val value: Int)
@@ -73,7 +67,6 @@ public annotation class MinLength(val value: Int)
  * @property value The maximum length of the string.
  */
 @OptIn(ExperimentalSerializationApi::class)
-@Target(AnnotationTarget.PROPERTY)
 @SerialInfo
 @MustBeDocumented
 public annotation class MaxLength(val value: Int)
@@ -84,7 +77,6 @@ public annotation class MaxLength(val value: Int)
  * @property value The regex pattern of the string.
  */
 @OptIn(ExperimentalSerializationApi::class)
-@Target(AnnotationTarget.PROPERTY)
 @SerialInfo
 @MustBeDocumented
 public annotation class Pattern(val value: String)
@@ -95,7 +87,6 @@ public annotation class Pattern(val value: String)
  * @property value The format of the string.
  */
 @OptIn(ExperimentalSerializationApi::class)
-@Target(AnnotationTarget.PROPERTY)
 @SerialInfo
 @MustBeDocumented
 public annotation class Format(val value: String)
@@ -106,7 +97,6 @@ public annotation class Format(val value: String)
  * @property value The factor of the number.
  */
 @OptIn(ExperimentalSerializationApi::class)
-@Target(AnnotationTarget.PROPERTY)
 @SerialInfo
 @MustBeDocumented
 public annotation class MultipleOf(val value: Int)
@@ -117,7 +107,6 @@ public annotation class MultipleOf(val value: Int)
  * @property value The minimum value of the number.
  */
 @OptIn(ExperimentalSerializationApi::class)
-@Target(AnnotationTarget.PROPERTY)
 @SerialInfo
 @MustBeDocumented
 public annotation class Minimum(val value: Int)
@@ -128,7 +117,6 @@ public annotation class Minimum(val value: Int)
  * @property value The maximum value of the number.
  */
 @OptIn(ExperimentalSerializationApi::class)
-@Target(AnnotationTarget.PROPERTY)
 @SerialInfo
 @MustBeDocumented
 public annotation class Maximum(val value: Int)
@@ -139,7 +127,6 @@ public annotation class Maximum(val value: Int)
  * @property value The exclusive minimum value of the number.
  */
 @OptIn(ExperimentalSerializationApi::class)
-@Target(AnnotationTarget.PROPERTY)
 @SerialInfo
 @MustBeDocumented
 public annotation class ExclusiveMinimum(val value: Int)
@@ -150,7 +137,6 @@ public annotation class ExclusiveMinimum(val value: Int)
  * @property value The exclusive maximum value of the number.
  */
 @OptIn(ExperimentalSerializationApi::class)
-@Target(AnnotationTarget.PROPERTY)
 @SerialInfo
 @MustBeDocumented
 public annotation class ExclusiveMaximum(val value: Int)
@@ -163,7 +149,6 @@ public annotation class ExclusiveMaximum(val value: Int)
  * @property value The factor of the number.
  */
 @OptIn(ExperimentalSerializationApi::class)
-@Target(AnnotationTarget.PROPERTY)
 @SerialInfo
 @MustBeDocumented
 public annotation class MultipleOfDouble(val value: Double)
@@ -176,7 +161,6 @@ public annotation class MultipleOfDouble(val value: Double)
  * @property value The minimum value of the number.
  */
 @OptIn(ExperimentalSerializationApi::class)
-@Target(AnnotationTarget.PROPERTY)
 @SerialInfo
 @MustBeDocumented
 public annotation class MinimumDouble(val value: Double)
@@ -189,7 +173,6 @@ public annotation class MinimumDouble(val value: Double)
  * @property value The maximum value of the number.
  */
 @OptIn(ExperimentalSerializationApi::class)
-@Target(AnnotationTarget.PROPERTY)
 @SerialInfo
 @MustBeDocumented
 public annotation class MaximumDouble(val value: Double)
@@ -202,7 +185,6 @@ public annotation class MaximumDouble(val value: Double)
  * @property value The exclusive minimum value of the number.
  */
 @OptIn(ExperimentalSerializationApi::class)
-@Target(AnnotationTarget.PROPERTY)
 @SerialInfo
 @MustBeDocumented
 public annotation class ExclusiveMinimumDouble(val value: Double)
@@ -215,7 +197,6 @@ public annotation class ExclusiveMinimumDouble(val value: Double)
  * @property value The exclusive maximum value of the number.
  */
 @OptIn(ExperimentalSerializationApi::class)
-@Target(AnnotationTarget.PROPERTY)
 @SerialInfo
 @MustBeDocumented
 public annotation class ExclusiveMaximumDouble(val value: Double)
