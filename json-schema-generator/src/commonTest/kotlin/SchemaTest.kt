@@ -83,12 +83,12 @@ class SchemaTest {
         //language=JSON
         val expected = """
             {
-                "type": "object",
-                "additionalProperties": {
-                    "type": {
-                        "type": "integer"
-                    }
-                }
+              "type": "object",
+              "additionalProperties": {
+              "type": "integer",
+                "minimum": -2147483648,
+                "maximum": 2147483647
+               }
             }
         """.trimIndent()
         schemaTest(MapSerializer(String.serializer(), Int.serializer()).descriptor, expected)
