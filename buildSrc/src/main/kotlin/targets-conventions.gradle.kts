@@ -17,7 +17,6 @@ plugins {
 
 kotlin {
     jvm {
-        withJava()
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
             jvmTarget = JvmTarget.JVM_1_8
