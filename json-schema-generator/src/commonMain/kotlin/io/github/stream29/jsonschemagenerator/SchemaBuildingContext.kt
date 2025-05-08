@@ -28,7 +28,7 @@ public data class SchemaBuildingContext
      *
      * The type name and nullability are inferred from the [SchemaBuildingContext].
      */
-    public fun JsonObjectBuilder.putType() = putType(descriptor.kind.jsonTypeName, descriptor.isNullable)
+    public fun JsonObjectBuilder.putType(): Unit = putType(descriptor.kind.jsonTypeName, descriptor.isNullable)
 
     /**
      * Put the field "type" into the [JsonObject] for schema.
@@ -63,7 +63,7 @@ public data class SchemaBuildingContext
      *
      * The properties are inferred from the [SchemaBuildingContext].
      */
-    public fun JsonObjectBuilder.putProperties() = with(descriptor) {
+    public fun JsonObjectBuilder.putProperties(): JsonElement? = with(descriptor) {
         putJsonObject("properties") {
             for (i in 0..<elementsCount) {
                 put(getElementName(i), schemaOf(getElementDescriptor(i), getElementAnnotations(i)))
@@ -76,7 +76,7 @@ public data class SchemaBuildingContext
      *
      * The item type is inferred from the [SchemaBuildingContext].
      */
-    public fun JsonObjectBuilder.putItems() = with(descriptor) {
+    public fun JsonObjectBuilder.putItems(): JsonElement? = with(descriptor) {
         put("items", schemaOf(elementDescriptors.single(), annotations))
     }
 
@@ -85,7 +85,7 @@ public data class SchemaBuildingContext
      *
      * The required fields are inferred from the [SchemaBuildingContext].
      */
-    public fun JsonObjectBuilder.putRequired() = with(descriptor) {
+    public fun JsonObjectBuilder.putRequired(): Unit = with(descriptor) {
         if ((0..<elementsCount).any { !isElementOptional(it) }) {
             putJsonArray("required") {
                 elementNames.forEachIndexed { index, name ->
@@ -139,7 +139,7 @@ public data class SchemaBuildingContext
     public inline fun <reified T> JsonObjectBuilder.findAnnotationAnd(
         annotations: Iterable<Annotation>,
         action: (T) -> Unit
-    ) = annotations.asSequence()
+    ): T? = annotations.asSequence()
         .filterIsInstance<T>()
         .firstOrNull()
         ?.also(action)
@@ -181,7 +181,7 @@ public data class SchemaBuildingContext
      *
      * The comment is resolved from the [annotations]. Nothing will be put if there is no [Comment].
      */
-    public fun JsonObjectBuilder.putComment() =
+    public fun JsonObjectBuilder.putComment(): Comment? =
         findAnnotationAnd<Comment>(annotations) { put("${'$'}comment", it.value) }
 
     /**
@@ -189,7 +189,7 @@ public data class SchemaBuildingContext
      *
      * The title is resolved from the [annotations]. Nothing will be put if there is no [Title].
      */
-    public fun JsonObjectBuilder.putTitle() =
+    public fun JsonObjectBuilder.putTitle(): Title? =
         findAnnotationAnd<Title>(annotations) { put("title", it.value) }
 
     /**
@@ -197,7 +197,7 @@ public data class SchemaBuildingContext
      *
      * The description is resolved from the [annotations]. Nothing will be put if there is no [Description].
      */
-    public fun JsonObjectBuilder.putDescription() =
+    public fun JsonObjectBuilder.putDescription(): Description? =
         findAnnotationAnd<Description>(annotations) { put("description", it.value) }
 
     /**
@@ -205,7 +205,7 @@ public data class SchemaBuildingContext
      *
      * The format is resolved from the [annotations]. Nothing will be put if there is no [Format].
      */
-    public fun JsonObjectBuilder.putFormat() =
+    public fun JsonObjectBuilder.putFormat(): Format? =
         findAnnotationAnd<Format>(annotations) { put("format", it.value) }
 
     /**
@@ -213,7 +213,7 @@ public data class SchemaBuildingContext
      *
      * The pattern is resolved from the [annotations]. Nothing will be put if there is no [Pattern].
      */
-    public fun JsonObjectBuilder.putPattern() =
+    public fun JsonObjectBuilder.putPattern(): Pattern? =
         findAnnotationAnd<Pattern>(annotations) { put("pattern", it.value) }
 
     /**
@@ -221,7 +221,7 @@ public data class SchemaBuildingContext
      *
      * The maxLength is resolved from the [annotations]. Nothing will be put if there is no [MaxLength].
      */
-    public fun JsonObjectBuilder.putMaxLength() =
+    public fun JsonObjectBuilder.putMaxLength(): MaxLength? =
         findAnnotationAnd<MaxLength>(annotations) { put("maxLength", it.value) }
 
     /**
@@ -229,7 +229,7 @@ public data class SchemaBuildingContext
      *
      * The minLength is resolved from the [annotations]. Nothing will be put if there is no [MinLength].
      */
-    public fun JsonObjectBuilder.putMinLength() =
+    public fun JsonObjectBuilder.putMinLength(): MinLength? =
         findAnnotationAnd<MinLength>(annotations) { put("minLength", it.value) }
 
     /**
@@ -237,7 +237,7 @@ public data class SchemaBuildingContext
      *
      * The multipleOf is resolved from the [annotations]. Nothing will be put if there is no [MultipleOf].
      */
-    public fun JsonObjectBuilder.putMultipleOf() =
+    public fun JsonObjectBuilder.putMultipleOf(): MultipleOf? =
         findAnnotationAnd<MultipleOf>(annotations) { put("multipleOf", it.value) }
 
     /**
@@ -245,7 +245,7 @@ public data class SchemaBuildingContext
      *
      * The minimum is resolved from the [annotations]. Nothing will be put if there is no [Minimum].
      */
-    public fun JsonObjectBuilder.putMinimum() =
+    public fun JsonObjectBuilder.putMinimum(): Minimum? =
         findAnnotationAnd<Minimum>(annotations) { put("minimum", it.value) }
 
     /**
@@ -253,7 +253,7 @@ public data class SchemaBuildingContext
      *
      * The maximum is resolved from the [annotations]. Nothing will be put if there is no [Maximum].
      */
-    public fun JsonObjectBuilder.putMaximum() =
+    public fun JsonObjectBuilder.putMaximum(): Maximum? =
         findAnnotationAnd<Maximum>(annotations) { put("maximum", it.value) }
 
     /**
@@ -261,7 +261,7 @@ public data class SchemaBuildingContext
      *
      * The exclusiveMinimum is resolved from the [annotations]. Nothing will be put if there is no [ExclusiveMinimum].
      */
-    public fun JsonObjectBuilder.putExclusiveMinimum() =
+    public fun JsonObjectBuilder.putExclusiveMinimum(): ExclusiveMinimum? =
         findAnnotationAnd<ExclusiveMinimum>(annotations) { put("exclusiveMinimum", it.value) }
 
     /**
@@ -269,7 +269,7 @@ public data class SchemaBuildingContext
      *
      * The exclusiveMaximum is resolved from the [annotations]. Nothing will be put if there is no [ExclusiveMaximum].
      */
-    public fun JsonObjectBuilder.putExclusiveMaximum() =
+    public fun JsonObjectBuilder.putExclusiveMaximum(): ExclusiveMaximum? =
         findAnnotationAnd<ExclusiveMaximum>(annotations) { put("exclusiveMaximum", it.value) }
 
     /**
@@ -277,7 +277,7 @@ public data class SchemaBuildingContext
      *
      * The multipleOf is resolved from the [annotations]. Nothing will be put if there is no [MultipleOfDouble].
      */
-    public fun JsonObjectBuilder.putMultipleOfDouble() =
+    public fun JsonObjectBuilder.putMultipleOfDouble(): MultipleOfDouble? =
         findAnnotationAnd<MultipleOfDouble>(annotations) { put("multipleOf", it.value) }
 
     /**
@@ -285,7 +285,7 @@ public data class SchemaBuildingContext
      *
      * The minimum is resolved from the [annotations]. Nothing will be put if there is no [MinimumDouble].
      */
-    public fun JsonObjectBuilder.putMinimumDouble() =
+    public fun JsonObjectBuilder.putMinimumDouble(): MinimumDouble? =
         findAnnotationAnd<MinimumDouble>(annotations) { put("minimum", it.value) }
 
     /**
@@ -293,7 +293,7 @@ public data class SchemaBuildingContext
      *
      * The maximum is resolved from the [annotations]. Nothing will be put if there is no [MaximumDouble].
      */
-    public fun JsonObjectBuilder.putMaximumDouble() =
+    public fun JsonObjectBuilder.putMaximumDouble(): MaximumDouble? =
         findAnnotationAnd<MaximumDouble>(annotations) { put("maximum", it.value) }
 
     /**
@@ -301,7 +301,7 @@ public data class SchemaBuildingContext
      *
      * The exclusiveMinimum is resolved from the [annotations]. Nothing will be put if there is no [ExclusiveMinimumDouble].
      */
-    public fun JsonObjectBuilder.putExclusiveMinimumDouble() =
+    public fun JsonObjectBuilder.putExclusiveMinimumDouble(): ExclusiveMinimumDouble? =
         findAnnotationAnd<ExclusiveMinimumDouble>(annotations) { put("exclusiveMinimum", it.value) }
 
     /**
@@ -309,7 +309,7 @@ public data class SchemaBuildingContext
      *
      * The exclusiveMaximum is resolved from the [annotations]. Nothing will be put if there is no [ExclusiveMaximumDouble].
      */
-    public fun JsonObjectBuilder.putExclusiveMaximumDouble() =
+    public fun JsonObjectBuilder.putExclusiveMaximumDouble(): ExclusiveMaximumDouble? =
         findAnnotationAnd<ExclusiveMaximumDouble>(annotations) { put("exclusiveMaximum", it.value) }
 
     /**
@@ -317,7 +317,7 @@ public data class SchemaBuildingContext
      *
      * The minimum is the default minimum of this Type.
      */
-    public fun JsonObjectBuilder.putDefaultMinimum() =
+    public fun JsonObjectBuilder.putDefaultMinimum(): JsonElement? =
         descriptor.kind.jsonNumberRestriction?.first?.run { put("minimum", this) }
 
     /**
@@ -325,7 +325,7 @@ public data class SchemaBuildingContext
      *
      * The maximum is the default maximum of this Type.
      */
-    public fun JsonObjectBuilder.putDefaultMaximum() =
+    public fun JsonObjectBuilder.putDefaultMaximum(): JsonElement? =
         descriptor.kind.jsonNumberRestriction?.second?.run { put("maximum", this) }
 
     /**
@@ -333,7 +333,7 @@ public data class SchemaBuildingContext
      *
      * The minLength is the default minimum length of this Type.
      */
-    public fun JsonObjectBuilder.putDefaultMinLength() =
+    public fun JsonObjectBuilder.putDefaultMinLength(): JsonElement? =
         if (descriptor.kind == PrimitiveKind.CHAR) put("minLength", 1) else null
 
     /**
@@ -341,7 +341,7 @@ public data class SchemaBuildingContext
      *
      * The maxLength is the default maximum length of this Type.
      */
-    public fun JsonObjectBuilder.putDefaultMaxLength() =
+    public fun JsonObjectBuilder.putDefaultMaxLength(): JsonElement? =
         if (descriptor.kind == PrimitiveKind.CHAR) put("maxLength", 1) else null
 }
 
