@@ -6,7 +6,7 @@ plugins {
 }
 
 kotlin {
-    explicitApi()
+//    explicitApi()
     sourceSets {
         val commonMain by getting {
             dependencies {
@@ -18,5 +18,9 @@ kotlin {
                 implementation(libs.kotlin.test)
             }
         }
+        all {
+            languageSettings.enableLanguageFeature("PropertyParamAnnotationDefaultTargetMode")
+        }
     }
+
 }
