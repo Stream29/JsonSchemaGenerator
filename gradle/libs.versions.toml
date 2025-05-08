@@ -1,5 +1,5 @@
 [versions]
-kotlin = "2.0.21"
+kotlin = "2.2.0-Beta2"
 kotlinx-serialization = "1.7.2"
 vanniktech = "0.29.0"
 streamlin = "2.4"
